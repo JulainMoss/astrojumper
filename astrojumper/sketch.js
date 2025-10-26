@@ -15,7 +15,6 @@ let dx = 0;
 let dy = 0;
 
 N = 100;
-L = 10;
 
 class Particle {
   constructor(x, y, m = 1.0) {
@@ -56,16 +55,6 @@ function setup() {
 
   for (let i = 0; i < N; ++i)
     particles.push(new Particle(random(width), random(height)));
-
-  // string();
-  // springs.push(new Spring(N-1, 0));
-  // grid();
-  // snowflake();
-  // comb();
-  // all_connected();
-  // springs.push(new Spring(0, 1));
-  // springs.push(new Spring(1, 2));
-  // springs.push(new Spring(2, 0));
 }
 
 
@@ -78,11 +67,17 @@ function forces() {
 
       let r = p5.Vector.sub(p2.r, p1.r);
       let r2 = r.magSq();
-      let f = r2 == 0 ? 0 : qq/r2;
+
+      let f = qq/r2;
       r.normalize();
       r.mult(f);
-      p2.a.sub(r);
-      p1.a.add(r);
+      if (r2 > 4*radius*radius){
+        p1.a.add(r);
+        p2.a.sub(r);
+      }else {
+        p1.a.sub(r);
+        p2.a.add(r);
+      }
     }
   }
 
