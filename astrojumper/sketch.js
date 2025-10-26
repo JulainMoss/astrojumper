@@ -61,9 +61,9 @@ function setup() {
     console.log("Button");
   };
 
+  particles.push(new Anchor(width/4, height/4, 100.0));
   for (let i = 0; i < N-1; ++i)
     particles.push(new Particle(random(width), random(height)));
-  particles.push(new Anchor(width/4, height/4, 100.0));
 }
 
 
@@ -77,7 +77,8 @@ function forces() {
       let r = p5.Vector.sub(p2.r, p1.r);
       let r2 = r.magSq();
 
-      let f = qq/r2;
+      let M = p1.m * p2.m;
+      let f = qq*M/r2;
       r.normalize();
       r.mult(f);
       if (r2 <= 4*radius*radius) r.mult(-1);
