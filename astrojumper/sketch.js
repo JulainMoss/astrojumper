@@ -36,59 +36,6 @@ class Particle {
   }
 }
 
-class Spring {
-  constructor(i, j) {
-    this.i = i;
-    this.j = j;
-  }
-
-  draw() {
-    const r1 = particles[this.i].r;
-    const r2 = particles[this.j].r;
-
-    line(r1.x, r1.y, r2.x, r2.y);
-  }
-}
-
-function all_connected(){
-  for (let i = 0; i < N; ++i){
-    for (let j = i+1; j < N; ++j){
-      springs.push(new Spring(i, j));
-    }
-  }
-}
-
-function string(){
-  for (let i = 1; i < N; ++i) springs.push(new Spring(i, i-1));
-}
-
-function grid(){
-  for (let x=0; x<L; ++x)
-    for(let y=0;y<L; ++y){
-      if (x+1 < L)springs.push(new Spring(x+y*L, x+1+y*L));
-      if (y+1 < L)springs.push(new Spring(x+y*L, x+L+y*L));
-  }
-}
-
-function snowflake(){
-  springs.push(new Spring(0, 1));
-  springs.push(new Spring(0, 2));
-  springs.push(new Spring(0, 3));
-  for(let x=4;x<N; ++x){
-    let i = x;
-    let j = Math.floor((x-2)/2);
-    console.log("i: ", i, "j: ", j);
-    springs.push(new Spring(i, j));
-    }
-}
-
-function comb(){
-  for (let x=0; x<L; ++x)
-    for(let y=0;y<L; ++y){
-      if (x+1 < L && Math.floor((x+y)/2) == Math.floor((x+1+y)/2))springs.push(new Spring(x+y*L, x+1+y*L));
-      if (y+1 < L)springs.push(new Spring(x+y*L, x+L+y*L));
-  }
-}
 
 function setup() {
   createCanvas(600, 600);
@@ -114,7 +61,7 @@ function setup() {
   // springs.push(new Spring(N-1, 0));
   // grid();
   // snowflake();
-  comb();
+  // comb();
   // all_connected();
   // springs.push(new Spring(0, 1));
   // springs.push(new Spring(1, 2));
@@ -123,26 +70,15 @@ function setup() {
 
 
 function forces() {
-  for (let s of springs){
-    // console.log("i: ", s.i, "j: ", s.j);
-    let p1 = particles[s.i];
-    let p2 = particles[s.j];
-    let r = p5.Vector.sub(p1.r, p2.r);
-    let l = r.mag();
-    let f = stiffness * (l - length);
-    r.normalize().mult(f);
-    p2.a.add(r);
-    p1.a.sub(r);
-  }
 
   for (let i = 0; i < N; ++i){
     for (let j = i+1; j < N;++j){
       let p1 = particles[i]
       let p2 = particles[j]
 
-      let r = p5.Vector.sub(p1.r, p2.r);
+      let r = p5.Vector.sub(p2.r, p1.r);
       let r2 = r.magSq();
-      let f = qq/r2;
+      let f = r2 == 0 ? 0 : qq/r2;
       r.normalize();
       r.mult(f);
       p2.a.sub(r);
