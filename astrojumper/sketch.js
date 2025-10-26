@@ -1,5 +1,4 @@
 let particles = [];
-let springs = [];
 
 const radius = 10;
 const stiffness = 50;
@@ -42,15 +41,8 @@ function setup() {
   dampingSlider = document.getElementById("damping");
   button = document.getElementById("button");
 
-  dampingSlider.oninput = function () {
-    damping = parseFloat(this.value);
-  };
-
   button.onclick = function () {
-    if (springs.length > 0) {
-      let index = floor(random(springs.length));
-      springs.splice(index, 1);
-    }
+    console.log("Button");
   };
 
   for (let i = 0; i < N; ++i)
@@ -71,21 +63,14 @@ function forces() {
       let f = qq/r2;
       r.normalize();
       r.mult(f);
-      if (r2 > 4*radius*radius){
-        p1.a.add(r);
-        p2.a.sub(r);
-      }else {
-        p1.a.sub(r);
-        p2.a.add(r);
-      }
+      if (r2 <= 4*radius*radius) r.mult(-2);
+      p1.a.add(r);
+      p2.a.sub(r);
     }
   }
 
   for (let p of particles) {
-    p.a.sub(p5.Vector.mult(p.v, damping));
-  }
-
-  for (let p of particles) {
+     p.a.sub(p5.Vector.mult(p.v, damping));
     p.a.div(p.m);
   }
 }
@@ -118,14 +103,8 @@ function draw() {
   }
 
   forces()
-
-  for (let p of particles){p.update()}
-
-  for (const s of springs) {
-    s.draw();
-  }
-
   for (const p of particles) {
+    p.update()
     p.draw();
   }
 
