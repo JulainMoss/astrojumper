@@ -2,7 +2,7 @@ let particles = [];
 
 const radius = 10;
 const qq = 67500;
-let damping = 13.0;
+let damping = 13;
 
 const dt = 1 / 60;
 
@@ -81,12 +81,15 @@ function forces() {
       let f = qq*M/r2;
       r.normalize();
       r.mult(f);
-      if (r2 >= 4*radius*radius){
+
+      // if 
+
+      if (r2 > 4*radius*radius){
         p1.a.add(r);
         p2.a.sub(r);
       } else {
-        p1.v = createVector(0, 0);
-        p2.v = createVector(0, 0);
+        p1.v.mult(0);
+        p2.v.mult(0);
       }
     }
   }
