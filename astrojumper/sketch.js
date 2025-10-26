@@ -1,8 +1,6 @@
 let particles = [];
 
 const radius = 10;
-const stiffness = 50;
-const length = 50;
 const qq = 67500;
 let damping = 13.0;
 
@@ -30,6 +28,24 @@ class Particle {
   }
 
   draw() {
+    fill(255)
+    circle(this.r.x, this.r.y, radius*2);
+  }
+}
+
+class Anchor {
+  constructor(x, y, m = 1.0) {
+    this.r = createVector(x, y);
+    this.v = createVector(0, 0);
+    this.a = createVector(0, 0);
+    this.m = m;
+  }
+
+  update() {
+  }
+
+  draw() {
+    fill(0)
     circle(this.r.x, this.r.y, radius*2);
   }
 }
@@ -45,8 +61,9 @@ function setup() {
     console.log("Button");
   };
 
-  for (let i = 0; i < N; ++i)
+  for (let i = 0; i < N-1; ++i)
     particles.push(new Particle(random(width), random(height)));
+  particles.push(new Anchor(width/4, height/4, 100.0));
 }
 
 
@@ -63,14 +80,14 @@ function forces() {
       let f = qq/r2;
       r.normalize();
       r.mult(f);
-      if (r2 <= 4*radius*radius) r.mult(-2);
+      if (r2 <= 4*radius*radius) r.mult(-1);
       p1.a.add(r);
       p2.a.sub(r);
     }
   }
 
   for (let p of particles) {
-     p.a.sub(p5.Vector.mult(p.v, damping));
+    p.a.sub(p5.Vector.mult(p.v, damping));
     p.a.div(p.m);
   }
 }
