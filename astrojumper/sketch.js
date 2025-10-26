@@ -11,7 +11,7 @@ let selected = null;
 let dx = 0;
 let dy = 0;
 
-N = 100;
+N = 2;
 
 class Particle {
   constructor(x, y, m = 1.0) {
@@ -61,8 +61,8 @@ function setup() {
     console.log("Button");
   };
 
-  particles.push(new Anchor(width/4, height/4, 100.0));
-  for (let i = 0; i < N-1; ++i)
+  particles.push(new Anchor(width/4, height/4, 1000.0));
+  for (let i = 1; i < N; ++i)
     particles.push(new Particle(random(width), random(height)));
 }
 
@@ -81,9 +81,13 @@ function forces() {
       let f = qq*M/r2;
       r.normalize();
       r.mult(f);
-      if (r2 <= 4*radius*radius) r.mult(-1);
-      p1.a.add(r);
-      p2.a.sub(r);
+      if (r2 >= 4*radius*radius){
+        p1.a.add(r);
+        p2.a.sub(r);
+      } else {
+        p1.v = createVector(0, 0);
+        p2.v = createVector(0, 0);
+      }
     }
   }
 
